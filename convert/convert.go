@@ -119,3 +119,18 @@ func StrBool(s any) bool {
 		}
 	}
 }
+
+func TimeStandardStr(t time.Time) string {
+	layout := "2006-01-02 15:04:05"
+	return t.Format(layout)
+}
+
+func TimeStandardDate(t time.Time) string {
+	layout := "2006-01-02"
+	format := t.Format(layout)
+	split := strings.Split(format, " ")
+	if split[0] == "0001-01-01" {
+		return ""
+	}
+	return split[0]
+}
