@@ -1,4 +1,4 @@
-package reflect
+package handlestruct
 
 import (
 	"reflect"
@@ -12,6 +12,7 @@ import (
 // 使用如下的方法可避免上述的区分与转化，只需要两个结构体，一个是存在time.Time的结构体，另一个是string类型的时间
 // 使用StrcutTimeCopy方法传递两个泛型，一个time.Time类型一个string时间的结构体，方法会自动区分日期与时间。
 // T是具有time.Time的结构体 ， M是具有string的结构体
+// 结构体字段必须完全一致，只是时间类型不同
 func StrcutTimeConvert[T any, M any](param T) M {
 	var result M
 	modelType := reflect.TypeOf(param)

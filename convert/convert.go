@@ -98,3 +98,24 @@ func DateToStr(t time.Time) string {
 	}
 	return split[0]
 }
+
+func StrBool(s any) bool {
+	if s == nil {
+		return false
+	} else {
+		switch s.(type) {
+		case bool:
+			b := s.(bool)
+			return b
+		case string:
+			s2 := s.(string)
+			if s2 == "" {
+				return false
+			} else {
+				return true
+			}
+		default:
+			return false
+		}
+	}
+}
