@@ -5,7 +5,28 @@ import (
 	"time"
 )
 
-// StructToMap converts a struct to a map while omitting empty fields and formatting time.Time fields.
+
+// StructToMap converts a struct to a map
+// automatic transfer time.Time to format time style YYYY-MM-DD HH:mm:ss
+func StructToMap(input interface{}, tagName string) map[string]interface{} {
+	result := make(map[string]interface{})
+	v := reflect.ValueOf(input)
+	origin := reflect.TypeOf(input)
+	for i := 0; i < v.NumField(); i++ {
+		field := v.Field(i)
+		originField := origin.Field(i)
+		tag := originField.Tag.Get(tagName)
+		if field.Type() == reflect.TypeOf(time.Time{}) && !field.IsZero() {
+			result[tag] = field.Interface().(time.Time).Format("2006-01-02 15:04:05")
+		} else {
+			result[tag] = field.Interface()
+		}
+	}
+	return result
+}
+
+
+// StructToMapOmitZero converts a struct to a map while omitting empty fields and formatting time.Time fields.
 // which can omit default value with each type
 // the map key name is the property of the struct
 func StructToMapOmitZero(input interface{}) map[string]interface{} {
@@ -31,7 +52,7 @@ func StructToMapOmitZero(input interface{}) map[string]interface{} {
 
 // transfer the grom tag name to the map key
 // omit the boolean type value
-func StructToMapNoBool(input interface{}) map[string]interface{} {
+func StructToMapNoBool(input interface{}, tagName string) map[string]interface{} {
     result := make(map[string]interface{})
     v := reflect.ValueOf(input)
 
@@ -40,7 +61,7 @@ func StructToMapNoBool(input interface{}) map[string]interface{} {
     for i := 0; i < v.NumField(); i++ {
         field := v.Field(i)
         originField := origin.Field(i)
-        tag := originField.Tag.Get("gorm")
+        tag := originField.Tag.Get(tagName)
         if field.Kind() == reflect.Bool {
             result[tag] = field.Interface()
         } else if field.Type() == reflect.TypeOf(time.Time{}) && !field.IsZero() {
